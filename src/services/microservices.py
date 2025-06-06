@@ -1,3 +1,4 @@
+'''This module defines the WarningModel class used for handling warning data in the application.'''
 import shuttlelib.db.mongo as mongolib
 import os
 from shuttlelib.utils.logger import logger
@@ -63,6 +64,7 @@ async def compare_diff_var(string1, string2):
     return different
 
 async def check_env_var(variablesmicro1,variablesmicro2):
+    '''Compare environment variables of two microservices and return a dictionary with differences.'''
     outputdict = {}
     different = False
     envvarstring1 = "initstring"
@@ -107,6 +109,7 @@ async def check_env_var(variablesmicro1,variablesmicro2):
     return outputdict
         
 async def check_image(imagemicro1,imagemicro2):
+    '''Compare images of two microservices and return a dictionary with differences.'''
     outputdict = {}
     
     differentimage = False
@@ -140,6 +143,7 @@ async def check_image(imagemicro1,imagemicro2):
     return outputdict
 
 async def check_resources(resourcesmicro1,resourcesmicro2):
+    '''Compare resources of two microservices and return a dictionary with differences.'''
     outputdict = {}
     different = False
     
@@ -176,7 +180,7 @@ async def check_resources(resourcesmicro1,resourcesmicro2):
     return outputdict
 
 async def get_paused_rollouts(entity_id=None,functional_environment="pro",cluster=None,region=None,namespace=None,destination=None):
-    
+    '''Get the microservices with paused rollouts for a given entity_id, functional_environment, cluster, region, namespace, and destination.'''
     if entity_id == None:
         entity_id = "spain"
 
@@ -212,7 +216,7 @@ async def get_paused_rollouts(entity_id=None,functional_environment="pro",cluste
     return outputlist
 
 async def get_mismatched_variables_warning(entity_id=None,functional_environment="pro",cluster=None,region=None,namespace=None,destination=None):
-    
+    '''Get the microservices with mismatched variables for a given entity_id, functional_environment, cluster, region, namespace, and destination.'''
     ## mismatchedVariables (only for environment variables)
     if entity_id == None:
         entity_id = "spain"
@@ -256,8 +260,7 @@ async def get_mismatched_variables_warning(entity_id=None,functional_environment
                 continue
             
             mismatchedvariableslist.append(f'{key}: {value}')
-            
-            
+
         if mismatchedvariableslist != None and mismatchedvariableslist != []:
             
             microservice = data["kind"]+"-"+data["name"]
@@ -276,6 +279,7 @@ async def get_mismatched_variables_warning(entity_id=None,functional_environment
     return outputlist
 
 async def get_difference_between_regions(entity_id=None,functional_environment="pro",cluster=None,namespace=None,option=None,destination=None):
+    '''Get the microservices with differences between regions for a given entity_id, functional_environment, cluster, namespace, option, and destination.'''
     if entity_id == None:
         entity_id = "spain"
 
@@ -291,7 +295,6 @@ async def get_difference_between_regions(entity_id=None,functional_environment="
         query.update({"namespace": namespace})
     else:
         query.update({"namespace": {"$not": {"$in": no_high_availability_namespaces}}})
-
 
     query.update({"name": {"$not": {"$in": no_high_availability_micros}}})
 
